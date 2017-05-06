@@ -1,6 +1,6 @@
 # Zabbix-MongoDB
 
-The following metrics are collected on mongodb version 3.0 by using python mongodb client, and then sent by zabbix sener.
+The following metrics are collected on mongodb version 3.0 by using python mongodb client, and then sent by zabbix sender.
 
 **Server Stats**
 - mongodb.ismaster
