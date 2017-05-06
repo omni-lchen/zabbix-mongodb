@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.0</version>
-    <date>2017-05-06T12:30:36Z</date>
+    <date>2017-05-06T12:40:48Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -2232,7 +2232,18 @@ Only present when using the mmapv1 storage engine.</description>
                             <application_prototypes/>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes/>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{Template MongoDB:mongodb.stats.ok[{#MONGODBNAME}].count(#3,0)}=3</expression>
+                            <name>MongoDB::{#MONGODBNAME} is not OK</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>3</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                    </trigger_prototypes>
                     <graph_prototypes>
                         <graph_prototype>
                             <name>{#MONGODBNAME}::collection and extent count</name>
