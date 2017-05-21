@@ -6,6 +6,9 @@
 2. Copy the scripts to mongodb host in /usr/local/bin .
 3. Copy mongodb zabbix agent configuration to /etc/zabbix-agent/zabbix_agentd.d and restart zabbix agent.
 
+Note:
+- Zabbix sender uses zabbix agent configuration to send the metrics, please check the hostname is set in the zabbix agent config /etc/zabbix/zabbix_agentd.conf, by default the hostname may be commented out.
+
 The following metrics are collected on mongodb version 3.0 by using python mongodb client, and then sent by zabbix sender.
 
 **Server Stats**
