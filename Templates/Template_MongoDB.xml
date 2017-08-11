@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2017-08-11T10:47:57Z</date>
+    <date>2017-08-11T11:49:17Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -376,9 +376,9 @@
                     <key>mongodb.fsync-locked</key>
                     <delay>0</delay>
                     <history>28</history>
-                    <trends>0</trends>
+                    <trends>365</trends>
                     <status>0</status>
-                    <value_type>4</value_type>
+                    <value_type>3</value_type>
                     <allowed_hosts/>
                     <units/>
                     <delta>0</delta>
@@ -393,7 +393,7 @@
                     <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <data_type>0</data_type>
+                    <data_type>3</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -720,9 +720,9 @@
                     <key>mongodb.hidden</key>
                     <delay>0</delay>
                     <history>28</history>
-                    <trends>0</trends>
+                    <trends>365</trends>
                     <status>0</status>
-                    <value_type>4</value_type>
+                    <value_type>3</value_type>
                     <allowed_hosts/>
                     <units/>
                     <delta>0</delta>
@@ -737,7 +737,7 @@
                     <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-                    <data_type>0</data_type>
+                    <data_type>3</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -1713,7 +1713,7 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>mongodb.zabbix.sender</key>
-                    <delay>300</delay>
+                    <delay>30</delay>
                     <history>28</history>
                     <trends>365</trends>
                     <status>0</status>
@@ -2811,8 +2811,8 @@ Only present when using the mmapv1 storage engine.</description>
     </templates>
     <triggers>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=1 &#13;
+and {Template MongoDB:mongodb.hidden.last()}=1 &#13;
 and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -2829,8 +2829,8 @@ and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=1 &#13;
+and {Template MongoDB:mongodb.hidden.last()}=1 &#13;
 and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -2847,8 +2847,8 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=1 &#13;
+and {Template MongoDB:mongodb.hidden.last()}=0&#13;
 and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -2865,8 +2865,8 @@ and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=1 &#13;
+and {Template MongoDB:mongodb.hidden.last()}=0&#13;
 and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -2979,8 +2979,8 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=0&#13;
+and {Template MongoDB:mongodb.hidden.last()}=1 &#13;
 and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -2997,8 +2997,8 @@ and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=0&#13;
+and {Template MongoDB:mongodb.hidden.last()}=1 &#13;
 and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
@@ -3015,8 +3015,8 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
-and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+            <expression>{Template MongoDB:mongodb.fsync-locked.last()}=0 &#13;
+and {Template MongoDB:mongodb.hidden.last()}=0&#13;
 and {Template MongoDB:mongodb.priority.last()}=0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>

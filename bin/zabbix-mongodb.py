@@ -114,13 +114,13 @@ class MongoDB(object):
 
         host_name = socket.gethostname()
 
-        fsync_locked = db.is_locked
+        fsync_locked = int(db.is_locked)
 
         config = db.admin.command("replSetGetConfig", 1)
         for i in range(0, len(config['config']['members'])):
             if host_name in config['config']['members'][i]['host']:
                 priority = config['config']['members'][i]['priority']
-                hidden = config['config']['members'][i]['hidden']
+                hidden = int(config['config']['members'][i]['hidden'])
 
         self.addMetrics('mongodb.fsync-locked', fsync_locked)
         self.addMetrics('mongodb.priority', priority)
