@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>3.0</version>
-    <date>2017-05-06T12:40:48Z</date>
+    <version>3.2</version>
+    <date>2017-08-11T09:10:15Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -1449,6 +1449,92 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <logtimefmt/>
                 </item>
                 <item>
+                    <name>MongoDB::OplogLength</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.oplog</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>0</value_type>
+                    <allowed_hosts/>
+                    <units>s</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::OplogSync</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.oplog-sync</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>0</value_type>
+                    <allowed_hosts/>
+                    <units>s</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
                     <name>MongoDB::page fault rate</name>
                     <type>2</type>
                     <snmp_community/>
@@ -2235,13 +2321,19 @@ Only present when using the mmapv1 storage engine.</description>
                     <trigger_prototypes>
                         <trigger_prototype>
                             <expression>{Template MongoDB:mongodb.stats.ok[{#MONGODBNAME}].count(#3,0)}=3</expression>
+                            <recovery_mode>0</recovery_mode>
+                            <recovery_expression/>
                             <name>MongoDB::{#MONGODBNAME} is not OK</name>
+                            <correlation_mode>0</correlation_mode>
+                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>3</priority>
                             <description/>
                             <type>0</type>
+                            <manual_close>0</manual_close>
                             <dependencies/>
+                            <tags/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes>
@@ -2449,6 +2541,7 @@ Only present when using the mmapv1 storage engine.</description>
                     <host_prototypes/>
                 </discovery_rule>
             </discovery_rules>
+            <httptests/>
             <macros>
                 <macro>
                     <macro>{$PAGE_FAULT_TH_WARN}</macro>
@@ -2740,34 +2833,116 @@ Only present when using the mmapv1 storage engine.</description>
     </templates>
     <triggers>
         <trigger>
-            <expression>{Template MongoDB:proc.num[mongod].count(#3,0)}=3</expression>
-            <name>MongoDB process is not running on {HOST.NAME}</name>
+            <expression>{Template MongoDB:mongodb.oplog.last()}&lt;259200</expression>
+            <recovery_mode>1</recovery_mode>
+            <recovery_expression>{Template MongoDB:mongodb.oplog.last()}&gt;259320</recovery_expression>
+            <name>MongoDB Oplog length 3 days on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>4</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.okstatus.count(#3,0)}=3</expression>
-            <name>MongoDB server status is not OK</name>
-            <url/>
-            <status>0</status>
-            <priority>3</priority>
-            <description/>
-            <type>0</type>
-            <dependencies/>
-        </trigger>
-        <trigger>
-            <expression>{Template MongoDB:mongodb.page.faults.min(#3)}&gt;{$PAGE_FAULT_TH_WARN}</expression>
-            <name>Page faults detected on {HOST.NAME} (LV={ITEM.VALUE})</name>
+            <expression>{Template MongoDB:mongodb.oplog.last()}&lt;604800</expression>
+            <recovery_mode>1</recovery_mode>
+            <recovery_expression>{Template MongoDB:mongodb.oplog.last()}&gt;604920</recovery_expression>
+            <name>MongoDB Oplog length 7 days on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>2</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.oplog-sync.last()}=60</expression>
+            <recovery_mode>1</recovery_mode>
+            <recovery_expression>{Template MongoDB:mongodb.oplog-sync.last()}&lt;30</recovery_expression>
+            <name>MongoDB Oplog Sync 1 minute on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.oplog-sync.last()}=300</expression>
+            <recovery_mode>1</recovery_mode>
+            <recovery_expression>{Template MongoDB:mongodb.oplog-sync.last()}&lt;240</recovery_expression>
+            <name>MongoDB Oplog Sync 5 minute on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:proc.num[mongod].count(#3,0)}=3</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>MongoDB process is not running on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.okstatus.count(#3,0)}=3</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>MongoDB server status is not OK</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>3</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.page.faults.min(#3)}&gt;{$PAGE_FAULT_TH_WARN}</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Page faults detected on {HOST.NAME} (LV={ITEM.VALUE})</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
         </trigger>
     </triggers>
     <graphs>
@@ -3275,6 +3450,70 @@ Only present when using the mmapv1 storage engine.</description>
                     <item>
                         <host>Template MongoDB</host>
                         <key>mongodb.operation.update</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>MongoDB::OplogLength</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>1</show_work_period>
+            <show_triggers>1</show_triggers>
+            <type>0</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>0</ymin_type_1>
+            <ymax_type_1>0</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>0</ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>1A7C11</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.oplog</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>MongoDB::OplogSync</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>1</show_work_period>
+            <show_triggers>1</show_triggers>
+            <type>0</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>0</ymin_type_1>
+            <ymax_type_1>0</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>0</ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>1A7C11</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.oplog-sync</key>
                     </item>
                 </graph_item>
             </graph_items>
