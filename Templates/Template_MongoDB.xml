@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2017-08-11T09:10:15Z</date>
+    <date>2017-08-11T10:47:57Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -239,92 +239,6 @@
                     <logtimefmt/>
                 </item>
                 <item>
-                    <name>MongoDB::backgroundFlushing::flushes count</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>0</multiplier>
-                    <snmp_oid/>
-                    <key>mongodb.backgroundFlushing.flushes</key>
-                    <delay>0</delay>
-                    <history>28</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <delta>2</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description>The number of times the database has flushed all writes to disk. This value will grow as database runs for longer periods of time.</description>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>MongoDB</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
-                    <name>MongoDB::backgroundFlushing::flush time</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>1</multiplier>
-                    <snmp_oid/>
-                    <key>mongodb.backgroundFlushing.total_ms</key>
-                    <delay>0</delay>
-                    <history>28</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units>s</units>
-                    <delta>2</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>0.001</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description>The total number of milliseconds (ms) that the mongod processes have spent writing (i.e. flushing) data to disk. Because total_ms is an absolute value, consider the flushes and average_ms values to provide context.</description>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>MongoDB</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
                     <name>MongoDB::connection::connection available</name>
                     <type>2</type>
                     <snmp_community/>
@@ -444,6 +358,49 @@
                     <privatekey/>
                     <port/>
                     <description>Count of all incoming connections created to the server. This number includes connections that have since closed.</description>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::FsyncLock</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.fsync-locked</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>0</trends>
+                    <status>0</status>
+                    <value_type>4</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description>Tells the user if the MongoDB has fsync lock enabled, this prevents write operations and is turned on during some maintenance scripts.</description>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -755,19 +712,19 @@
                     <logtimefmt/>
                 </item>
                 <item>
-                    <name>MongoDB::heap size</name>
+                    <name>MongoDB::Hidden</name>
                     <type>2</type>
                     <snmp_community/>
                     <multiplier>0</multiplier>
                     <snmp_oid/>
-                    <key>mongodb.heap.size</key>
+                    <key>mongodb.hidden</key>
                     <delay>0</delay>
                     <history>28</history>
-                    <trends>365</trends>
+                    <trends>0</trends>
                     <status>0</status>
-                    <value_type>3</value_type>
+                    <value_type>4</value_type>
                     <allowed_hosts/>
-                    <units>B</units>
+                    <units/>
                     <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
@@ -787,7 +744,7 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <description/>
+                    <description>Tells the user if the MongoDB is hidden, this means the database can write operations from other members, but won't server reads</description>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -1481,7 +1438,7 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <description/>
+                    <description>Describes the number of seconds that exist in the Oplog</description>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -1524,7 +1481,7 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <description/>
+                    <description>Shows the number of seconds between the last operation in the oplog, and the the current time. This should be fairly accurate on a database that has continuous operations, but if the database doesn't do anything it will fall behind.</description>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -1568,6 +1525,49 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <privatekey/>
                     <port/>
                     <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::Priority</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.priority</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>0</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description>The current priority of this database, 0 means it cannot be elected as master. This is used as part of the hiding process</description>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -2688,7 +2688,7 @@ Only present when using the mmapv1 storage engine.</description>
                             <dynamic>0</dynamic>
                             <sort_triggers>0</sort_triggers>
                             <resource>
-                                <name>MongoDB::memory and heap size</name>
+                                <name>MongoDB::memory</name>
                                 <host>Template MongoDB</host>
                             </resource>
                             <max_columns>3</max_columns>
@@ -2764,28 +2764,6 @@ Only present when using the mmapv1 storage engine.</description>
                             <resourcetype>0</resourcetype>
                             <width>500</width>
                             <height>100</height>
-                            <x>1</x>
-                            <y>2</y>
-                            <colspan>1</colspan>
-                            <rowspan>1</rowspan>
-                            <elements>0</elements>
-                            <valign>0</valign>
-                            <halign>0</halign>
-                            <style>0</style>
-                            <url/>
-                            <dynamic>0</dynamic>
-                            <sort_triggers>0</sort_triggers>
-                            <resource>
-                                <name>MongoDB::background flushing</name>
-                                <host>Template MongoDB</host>
-                            </resource>
-                            <max_columns>3</max_columns>
-                            <application/>
-                        </screen_item>
-                        <screen_item>
-                            <resourcetype>0</resourcetype>
-                            <width>500</width>
-                            <height>100</height>
                             <x>0</x>
                             <y>3</y>
                             <colspan>1</colspan>
@@ -2832,6 +2810,78 @@ Only present when using the mmapv1 storage engine.</description>
         </template>
     </templates>
     <triggers>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Locked, hidden and priority 0 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description>The database is locked, hidden and priority set to 0</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=1</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Locked, hidden and priority 1 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description>The database is locked, hidden and priority set to 1</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Locked, not hidden and priority 0 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description>The database is locked, hidden and priority set to 0</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=1</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Locked, not hidden and priority 1 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description>The database is locked, not hidden and priority set to 1</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
         <trigger>
             <expression>{Template MongoDB:mongodb.oplog.last()}&lt;259200</expression>
             <recovery_mode>1</recovery_mode>
@@ -2923,6 +2973,60 @@ Only present when using the mmapv1 storage engine.</description>
             <status>0</status>
             <priority>3</priority>
             <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Not locked, but is hidden and priority 0 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description>The database is not locked, but is hidden and priority set to 0</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;True&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=1</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Not locked, is hidden and priority 1 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description>The database is not locked, is hidden and priority set to 1</description>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.fsync-locked.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.hidden.str(&quot;False&quot;)}=1 &#13;
+and {Template MongoDB:mongodb.priority.last()}=0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Not locked or hidden, but priority 0 on {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description>The database is not locked or hidden, but priority set to 0</description>
             <type>0</type>
             <manual_close>0</manual_close>
             <dependencies/>
@@ -3022,50 +3126,6 @@ Only present when using the mmapv1 storage engine.</description>
                     <item>
                         <host>Template MongoDB</host>
                         <key>mongodb.asserts.warning</key>
-                    </item>
-                </graph_item>
-            </graph_items>
-        </graph>
-        <graph>
-            <name>MongoDB::background flushing</name>
-            <width>900</width>
-            <height>200</height>
-            <yaxismin>0.0000</yaxismin>
-            <yaxismax>100.0000</yaxismax>
-            <show_work_period>1</show_work_period>
-            <show_triggers>1</show_triggers>
-            <type>0</type>
-            <show_legend>1</show_legend>
-            <show_3d>0</show_3d>
-            <percent_left>0.0000</percent_left>
-            <percent_right>0.0000</percent_right>
-            <ymin_type_1>0</ymin_type_1>
-            <ymax_type_1>0</ymax_type_1>
-            <ymin_item_1>0</ymin_item_1>
-            <ymax_item_1>0</ymax_item_1>
-            <graph_items>
-                <graph_item>
-                    <sortorder>0</sortorder>
-                    <drawtype>0</drawtype>
-                    <color>1A7C11</color>
-                    <yaxisside>0</yaxisside>
-                    <calc_fnc>7</calc_fnc>
-                    <type>0</type>
-                    <item>
-                        <host>Template MongoDB</host>
-                        <key>mongodb.backgroundFlushing.flushes</key>
-                    </item>
-                </graph_item>
-                <graph_item>
-                    <sortorder>1</sortorder>
-                    <drawtype>0</drawtype>
-                    <color>F63100</color>
-                    <yaxisside>1</yaxisside>
-                    <calc_fnc>7</calc_fnc>
-                    <type>0</type>
-                    <item>
-                        <host>Template MongoDB</host>
-                        <key>mongodb.backgroundFlushing.total_ms</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -3227,7 +3287,7 @@ Only present when using the mmapv1 storage engine.</description>
             </graph_items>
         </graph>
         <graph>
-            <name>MongoDB::memory and heap size</name>
+            <name>MongoDB::memory</name>
             <width>900</width>
             <height>200</height>
             <yaxismin>0.0000</yaxismin>
@@ -3290,18 +3350,6 @@ Only present when using the mmapv1 storage engine.</description>
                     <item>
                         <host>Template MongoDB</host>
                         <key>mongodb.memory.resident</key>
-                    </item>
-                </graph_item>
-                <graph_item>
-                    <sortorder>4</sortorder>
-                    <drawtype>0</drawtype>
-                    <color>A54F10</color>
-                    <yaxisside>0</yaxisside>
-                    <calc_fnc>7</calc_fnc>
-                    <type>0</type>
-                    <item>
-                        <host>Template MongoDB</host>
-                        <key>mongodb.heap.size</key>
                     </item>
                 </graph_item>
             </graph_items>

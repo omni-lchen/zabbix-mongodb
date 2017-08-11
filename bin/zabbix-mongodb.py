@@ -8,6 +8,7 @@
 from pymongo import MongoClient
 from calendar import timegm
 from time import gmtime
+import socket
 import json
 
 class MongoDB(object):
@@ -78,8 +79,6 @@ class MongoDB(object):
         return {"data":DBList}
 
     def getOplog(self):
-        error = False
-
         db = MongoClient(self.mongo_host, self.mongo_port)
 
         if self.mongo_user and self.mongo_password:
@@ -99,13 +98,34 @@ class MongoDB(object):
             op_last_st = op_last[0]['ts']
             op_lst = (op_last.next())['ts'].time
 
-        #status = round(((((float(op_lst - op_fst)) / 60) / 60) / 24), 1)
         status = round(float(op_lst - op_fst), 1)
         self.addMetrics('mongodb.oplog', status)
 
         currentTime = timegm(gmtime())
         oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
         self.addMetrics('mongodb.oplog-sync', (currentTime - oplog))
+
+
+    def getMaintenance(self):
+        db = MongoClient(self.mongo_host, self.mongo_port)
+
+        if self.mongo_user and self.mongo_password:
+            db.authenticate(self.mongo_user, self.mongo_password)
+
+        host_name = socket.gethostname()
+
+        fsync_locked = db.is_locked
+
+        config = db.admin.command("replSetGetConfig", 1)
+        for i in range(0, len(config['config']['members'])):
+            if host_name in config['config']['members'][i]['host']:
+                priority = config['config']['members'][i]['priority']
+                hidden = config['config']['members'][i]['hidden']
+
+        self.addMetrics('mongodb.fsync-locked', fsync_locked)
+        self.addMetrics('mongodb.priority', priority)
+        self.addMetrics('mongodb.hidden', hidden)
+
 
     # Get Server Status
     def getServerStatusMetrics(self):
@@ -181,6 +201,7 @@ if __name__ == '__main__':
     MongoDB_LLD = str(json.dumps(MongoDB.getMongoDBLLD()))
     print '- mongodb.discovery ' + MongoDB_LLD
     MongoDB.getOplog()
+    MongoDB.getMaintenance()
     MongoDB.getServerStatusMetrics()
     MongoDB.getDBStatsMetrics()
     MongoDB.printMetrics()
