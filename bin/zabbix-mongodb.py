@@ -167,6 +167,11 @@ class MongoDB(object):
         # extra info
         self.addMetrics('mongodb.page.faults', ss['extra_info']['page_faults'])
 
+        #wired tiger
+        self.addMetrics('mongodb.used-cache', ss['wiredTiger']['cache']["bytes currently in the cache"])
+        self.addMetrics('mongodb.total-cache', ss['wiredTiger']['cache']["maximum bytes configured"])
+        self.addMetrics('mongodb.dirty-cache', ss['wiredTiger']['cache']["tracked dirty bytes in the cache"])
+
         # global lock
         lockTotalTime = ss['globalLock']['totalTime']
         self.addMetrics('mongodb.globalLock.totalTime', lockTotalTime)

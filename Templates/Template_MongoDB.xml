@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2017-08-11T11:49:17Z</date>
+    <date>2017-08-14T15:50:26Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -358,6 +358,49 @@
                     <privatekey/>
                     <port/>
                     <description>Count of all incoming connections created to the server. This number includes connections that have since closed.</description>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::Wired Tiger Dirty Cache</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.dirty-cache</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>B</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -800,49 +843,6 @@
                     <logtimefmt/>
                 </item>
                 <item>
-                    <name>MongoDB::memory::mapped</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>1</multiplier>
-                    <snmp_oid/>
-                    <key>mongodb.memory.mapped</key>
-                    <delay>0</delay>
-                    <history>28</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units>B</units>
-                    <delta>0</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1048576</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>MongoDB</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
                     <name>MongoDB::memory::mappedWithJournal</name>
                     <type>2</type>
                     <snmp_community/>
@@ -878,49 +878,6 @@
                     <description>Only for the MMAPv1 storage engine.&#13;
 &#13;
 The amount of mapped memory, in megabytes (MB), including the memory used for journaling. This value will always be twice the value of mem.mapped. This field is only included if journaling is enabled.</description>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>MongoDB</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
-                    <name>MongoDB::memory::resident</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>1</multiplier>
-                    <snmp_oid/>
-                    <key>mongodb.memory.resident</key>
-                    <delay>0</delay>
-                    <history>28</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units>B</units>
-                    <delta>0</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1048576</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
@@ -1621,6 +1578,49 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <logtimefmt/>
                 </item>
                 <item>
+                    <name>MongoDB::Wired Tiger Total Cache</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.total-cache</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>B</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
                     <name>MongoDB::uptime</name>
                     <type>2</type>
                     <snmp_community/>
@@ -1645,6 +1645,92 @@ The amount of mapped memory, in megabytes (MB), including the memory used for jo
                     <formula>1</formula>
                     <delay_flex/>
                     <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::Wired Tiger Used Cache</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.used-cache</key>
+                    <delay>0</delay>
+                    <history>28</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>B</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>MongoDB</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>MongoDB::Wired Tiger Used Cache %</name>
+                    <type>15</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>mongodb.used-cache-p</key>
+                    <delay>30</delay>
+                    <history>90</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>%</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params>(100 * last(mongodb.used-cache) / last(mongodb.total-cache))</params>
                     <ipmi_sensor/>
                     <data_type>0</data_type>
                     <authtype>0</authtype>
@@ -2899,7 +2985,7 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.oplog.last()}&lt;604800</expression>
+            <expression>{Template MongoDB:mongodb.oplog.last()}&lt;604800 and not {Template MongoDB:mongodb.oplog.last()}&lt;259200</expression>
             <recovery_mode>1</recovery_mode>
             <recovery_expression>{Template MongoDB:mongodb.oplog.last()}&gt;604920</recovery_expression>
             <name>MongoDB Oplog length 7 days on {HOST.NAME}</name>
@@ -2915,7 +3001,7 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.oplog-sync.last()}=60</expression>
+            <expression>{Template MongoDB:mongodb.oplog-sync.last()}&gt;=60 and not {Template MongoDB:mongodb.oplog-sync.last()}&gt;=300</expression>
             <recovery_mode>1</recovery_mode>
             <recovery_expression>{Template MongoDB:mongodb.oplog-sync.last()}&lt;30</recovery_expression>
             <name>MongoDB Oplog Sync 1 minute on {HOST.NAME}</name>
@@ -2931,7 +3017,7 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template MongoDB:mongodb.oplog-sync.last()}=300</expression>
+            <expression>{Template MongoDB:mongodb.oplog-sync.last()}&gt;=300</expression>
             <recovery_mode>1</recovery_mode>
             <recovery_expression>{Template MongoDB:mongodb.oplog-sync.last()}&lt;240</recovery_expression>
             <name>MongoDB Oplog Sync 5 minute on {HOST.NAME}</name>
@@ -2972,6 +3058,38 @@ and {Template MongoDB:mongodb.priority.last()}=1</expression>
             <url/>
             <status>0</status>
             <priority>3</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.used-cache-p.last()}&gt;=90 and {Template MongoDB:mongodb.used-cache-p.last()}&lt;95</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>MongoDB Wired Tiger Used cache 90% on  {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template MongoDB:mongodb.used-cache-p.last()}&gt;=95</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>MongoDB Wired Tiger Used cache 95% on  {HOST.NAME}</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
             <description/>
             <type>0</type>
             <manual_close>0</manual_close>
@@ -3337,19 +3455,7 @@ and {Template MongoDB:mongodb.priority.last()}=0</expression>
                     <type>0</type>
                     <item>
                         <host>Template MongoDB</host>
-                        <key>mongodb.memory.mapped</key>
-                    </item>
-                </graph_item>
-                <graph_item>
-                    <sortorder>3</sortorder>
-                    <drawtype>0</drawtype>
-                    <color>F63100</color>
-                    <yaxisside>0</yaxisside>
-                    <calc_fnc>7</calc_fnc>
-                    <type>0</type>
-                    <item>
-                        <host>Template MongoDB</host>
-                        <key>mongodb.memory.resident</key>
+                        <key>mongodb.used-cache</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -3594,6 +3700,74 @@ and {Template MongoDB:mongodb.priority.last()}=0</expression>
                     <item>
                         <host>Template MongoDB</host>
                         <key>mongodb.page.faults</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>Wired Tiger Memory Usage</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>1</show_work_period>
+            <show_triggers>1</show_triggers>
+            <type>0</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>0</ymin_type_1>
+            <ymax_type_1>0</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>0</ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>1A7C11</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.total-cache</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>F63100</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.used-cache</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>2</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>2774A4</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.dirty-cache</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>3</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>A54F10</color>
+                    <yaxisside>1</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>Template MongoDB</host>
+                        <key>mongodb.used-cache-p</key>
                     </item>
                 </graph_item>
             </graph_items>
