@@ -6,6 +6,9 @@
 # Requires: MongoClient in python
 
 from pymongo import MongoClient
+from calendar import timegm
+from time import gmtime
+import socket
 import json
 
 class MongoDB(object):
@@ -75,6 +78,55 @@ class MongoDB(object):
                 DBList.append(dict)
         return {"data":DBList}
 
+    def getOplog(self):
+        db = MongoClient(self.mongo_host, self.mongo_port)
+
+        if self.mongo_user and self.mongo_password:
+            db.authenticate(self.mongo_user, self.mongo_password)
+
+        dbl = db.local
+        coll = dbl['oplog.rs']
+
+        op_first = (coll.find().sort('$natural', 1).limit(1))
+
+        while op_first.alive:
+            op_fst = (op_first.next())['ts'].time
+
+        op_last = (coll.find().sort('$natural', -1).limit(1))
+
+        while op_last.alive:
+            op_last_st = op_last[0]['ts']
+            op_lst = (op_last.next())['ts'].time
+
+        status = round(float(op_lst - op_fst), 1)
+        self.addMetrics('mongodb.oplog', status)
+
+        currentTime = timegm(gmtime())
+        oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
+        self.addMetrics('mongodb.oplog-sync', (currentTime - oplog))
+
+
+    def getMaintenance(self):
+        db = MongoClient(self.mongo_host, self.mongo_port)
+
+        if self.mongo_user and self.mongo_password:
+            db.authenticate(self.mongo_user, self.mongo_password)
+
+        host_name = socket.gethostname()
+
+        fsync_locked = int(db.is_locked)
+
+        config = db.admin.command("replSetGetConfig", 1)
+        for i in range(0, len(config['config']['members'])):
+            if host_name in config['config']['members'][i]['host']:
+                priority = config['config']['members'][i]['priority']
+                hidden = int(config['config']['members'][i]['hidden'])
+
+        self.addMetrics('mongodb.fsync-locked', fsync_locked)
+        self.addMetrics('mongodb.priority', priority)
+        self.addMetrics('mongodb.hidden', hidden)
+
+
     # Get Server Status
     def getServerStatusMetrics(self):
         if self.__conn is None:
@@ -83,6 +135,7 @@ class MongoDB(object):
         if self.mongo_user and self.mongo_password:
             db.authenticate(self.mongo_user, self.mongo_password)
         ss = db.command('serverStatus')
+
         #print ss
 
         # db info
@@ -94,10 +147,6 @@ class MongoDB(object):
         # asserts
         for k, v in ss['asserts'].items():
             self.addMetrics('mongodb.asserts.' + k, v)
-
-        # background flushing
-        self.addMetrics('mongodb.backgroundFlushing.flushes', ss['backgroundFlushing']['flushes'])
-        self.addMetrics('mongodb.backgroundFlushing.total_ms', ss['backgroundFlushing']['total_ms'])
 
         # operations
         for k, v in ss['opcounters'].items():
@@ -116,8 +165,12 @@ class MongoDB(object):
             self.addMetrics('mongodb.network.' + k, v)
 
         # extra info
-        self.addMetrics('mongodb.heap.size', ss['extra_info']['heap_usage_bytes'])
         self.addMetrics('mongodb.page.faults', ss['extra_info']['page_faults'])
+
+        #wired tiger
+        self.addMetrics('mongodb.used-cache', ss['wiredTiger']['cache']["bytes currently in the cache"])
+        self.addMetrics('mongodb.total-cache', ss['wiredTiger']['cache']["maximum bytes configured"])
+        self.addMetrics('mongodb.dirty-cache', ss['wiredTiger']['cache']["tracked dirty bytes in the cache"])
 
         # global lock
         lockTotalTime = ss['globalLock']['totalTime']
@@ -152,6 +205,8 @@ if __name__ == '__main__':
     MongoDB.getDBNames()
     MongoDB_LLD = str(json.dumps(MongoDB.getMongoDBLLD()))
     print '- mongodb.discovery ' + MongoDB_LLD
+    MongoDB.getOplog()
+    MongoDB.getMaintenance()
     MongoDB.getServerStatusMetrics()
     MongoDB.getDBStatsMetrics()
     MongoDB.printMetrics()
