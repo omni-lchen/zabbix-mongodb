@@ -70,13 +70,17 @@ class MongoDB(object):
             DBNames = self.getDBNames()
         else:
             DBNames = self.__dbnames
+        dictLLD = {}
         DBList = []
+        dictLLD['key'] = 'mongodb.discovery'
+        dictLLD['value'] = {"data": DBList}
         if DBNames is not None:
             for db in DBNames:
                 dict = {}
                 dict['{#MONGODBNAME}'] = db
                 DBList.append(dict)
-        return {"data":DBList}
+            dictLLD['value'] = {"data": DBList}
+        self.__metrics.insert(0, dictLLD)
 
     def getOplog(self):
         db = MongoClient(self.mongo_host, self.mongo_port)
@@ -203,8 +207,7 @@ class MongoDB(object):
 if __name__ == '__main__':
     MongoDB = MongoDB()
     MongoDB.getDBNames()
-    MongoDB_LLD = str(json.dumps(MongoDB.getMongoDBLLD()))
-    print '- mongodb.discovery ' + MongoDB_LLD
+    MongoDB.getMongoDBLLD()
     MongoDB.getOplog()
     MongoDB.getMaintenance()
     MongoDB.getServerStatusMetrics()
