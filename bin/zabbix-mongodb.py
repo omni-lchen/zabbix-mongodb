@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Date: 03/01/2017
 # Author: Long Chen
 # Description: A script to get MongoDB metrics
@@ -8,8 +7,6 @@
 from pymongo import MongoClient
 from calendar import timegm
 from time import gmtime
-import socket
-import json
 
 class MongoDB(object):
     def __init__(self):
@@ -25,10 +22,16 @@ class MongoDB(object):
     # Connect to MongoDB
     def connect(self):
         if self.__conn is None:
-            try:
-                self.__conn = MongoClient(host=self.mongo_host, port=self.mongo_port)
-            except Exception as e:
-                print 'Error in MongoDB connection: %s' % str(e)
+            if self.mongo_user is None:
+                try:
+                    self.__conn = MongoClient('mongodb://%s:%s' % (self.mongo_host, self.mongo_port))
+                except Exception as e:
+                    print ('Error in MongoDB connection: %s' % str(e))
+            else:
+                try:
+                    self.__conn = MongoClient('mongodb://%s:%s@%s:%s' % (self.mongo_user, self.mongo_password, self.mongo_host, self.mongo_port))
+                except Exception as e:
+                    print ('Error in MongoDB connection: %s' % str(e))
 
     # Add each mectrics to the metrics list
     def addMetrics(self, k, v):
@@ -43,15 +46,14 @@ class MongoDB(object):
         for m in metrics:
             zabbix_item_key = str(m['key'])
             zabbix_item_value = str(m['value'])
-            print '- ' + zabbix_item_key + ' ' + zabbix_item_value
+            print ('- ' + zabbix_item_key + ' ' + zabbix_item_value)
 
     # Get a list of DB names
     def getDBNames(self):
         if self.__conn is None:
             self.connect()
         db = self.__conn[self.mongo_db[0]]
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
+
         master = db.command('isMaster')['ismaster']
         dict = {}
         dict['key'] = 'mongodb.ismaster'
@@ -83,64 +85,58 @@ class MongoDB(object):
         self.__metrics.insert(0, dictLLD)
 
     def getOplog(self):
-        db = MongoClient(self.mongo_host, self.mongo_port)
+        if self.__conn is None:
+            self.connect()
+        db = self.__conn['local']
 
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-
-        dbl = db.local
-        coll = dbl['oplog.rs']
+        coll = db.oplog.rs
 
         op_first = (coll.find().sort('$natural', 1).limit(1))
-
-        while op_first.alive:
-            op_fst = (op_first.next())['ts'].time
-
         op_last = (coll.find().sort('$natural', -1).limit(1))
 
-        while op_last.alive:
+        # if host is not a member of replica set, without this check we will raise StopIteration
+        # as guided in http://api.mongodb.com/python/current/api/pymongo/cursor.html
+        if op_first.count() > 0 and op_last.count() > 0:
+            op_fst = (op_first.next())['ts'].time
             op_last_st = op_last[0]['ts']
             op_lst = (op_last.next())['ts'].time
 
-        status = round(float(op_lst - op_fst), 1)
-        self.addMetrics('mongodb.oplog', status)
+            status = round(float(op_lst - op_fst), 1)
+            self.addMetrics('mongodb.oplog', status)
 
-        currentTime = timegm(gmtime())
-        oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
-        self.addMetrics('mongodb.oplog-sync', (currentTime - oplog))
+            currentTime = timegm(gmtime())
+            oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
+            self.addMetrics('mongodb.oplog-sync', (currentTime - oplog))
 
 
     def getMaintenance(self):
-        db = MongoClient(self.mongo_host, self.mongo_port)
-
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-
-        host_name = socket.gethostname()
+        if self.__conn is None:
+            self.connect()
+        db = self.__conn
 
         fsync_locked = int(db.is_locked)
+	self.addMetrics('mongodb.fsync-locked', fsync_locked)
 
-        config = db.admin.command("replSetGetConfig", 1)
-        for i in range(0, len(config['config']['members'])):
-            if host_name in config['config']['members'][i]['host']:
-                priority = config['config']['members'][i]['priority']
-                hidden = int(config['config']['members'][i]['hidden'])
+	try:
+            config = db.admin.command("replSetGetConfig", 1)
+            connstring = (self.mongo_host + ':' + str(self.mongo_port))
 
-        self.addMetrics('mongodb.fsync-locked', fsync_locked)
-        self.addMetrics('mongodb.priority', priority)
-        self.addMetrics('mongodb.hidden', hidden)
+            for i in range(0, len(config['config']['members'])):
+                if (connstring) in config['config']['members'][i]['host']:
+                    priority = config['config']['members'][i]['priority']
+                    hidden = int(config['config']['members'][i]['hidden'])
 
+            self.addMetrics('mongodb.priority', priority)
+            self.addMetrics('mongodb.hidden', hidden)
+        except Exception:
+            print ('Error while fetching replica set configuration. Not a member of replica set?')
 
     # Get Server Status
     def getServerStatusMetrics(self):
         if self.__conn is None:
             self.connect()
         db = self.__conn[self.mongo_db[0]]
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
         ss = db.command('serverStatus')
-
-        #print ss
 
         # db info
         self.addMetrics('mongodb.version', ss['version'])
@@ -172,9 +168,10 @@ class MongoDB(object):
         self.addMetrics('mongodb.page.faults', ss['extra_info']['page_faults'])
 
         #wired tiger
-        self.addMetrics('mongodb.used-cache', ss['wiredTiger']['cache']["bytes currently in the cache"])
-        self.addMetrics('mongodb.total-cache', ss['wiredTiger']['cache']["maximum bytes configured"])
-        self.addMetrics('mongodb.dirty-cache', ss['wiredTiger']['cache']["tracked dirty bytes in the cache"])
+        if ss['storageEngine']['name'] is 'wiredTiger':
+            self.addMetrics('mongodb.used-cache', ss['wiredTiger']['cache']["bytes currently in the cache"])
+            self.addMetrics('mongodb.total-cache', ss['wiredTiger']['cache']["maximum bytes configured"])
+            self.addMetrics('mongodb.dirty-cache', ss['wiredTiger']['cache']["tracked dirty bytes in the cache"])
 
         # global lock
         lockTotalTime = ss['globalLock']['totalTime']
@@ -193,8 +190,6 @@ class MongoDB(object):
         if self.__dbnames is not None:
             for mongo_db in self.__dbnames:
                 db = self.__conn[mongo_db]
-                if self.mongo_user and self.mongo_password:
-                    self.__conn[self.mongo_db[0]].authenticate(self.mongo_user, self.mongo_password)
                 dbs = db.command('dbstats')
                 for k, v in dbs.items():
                     if k in ['storageSize','ok','avgObjSize','indexes','objects','collections','fileSize','numExtents','dataSize','indexSize','nsSizeMB']:
