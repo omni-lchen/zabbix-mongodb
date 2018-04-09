@@ -1,17 +1,19 @@
 #!/usr/bin/env python
+"""
+Date: 03/01/2017
+Author: Long Chen
+Description: A script to get MongoDB metrics
+Requires: MongoClient in python
+"""
 
-# Date: 03/01/2017
-# Author: Long Chen
-# Description: A script to get MongoDB metrics
-# Requires: MongoClient in python
-
-from pymongo import MongoClient
 from calendar import timegm
 from time import gmtime
-import socket
-import json
+
+from pymongo import MongoClient, errors
 
 class MongoDB(object):
+    """main script class"""
+    # pylint: disable=too-many-instance-attributes
     def __init__(self):
         self.mongo_host = "127.0.0.1"
         self.mongo_port = 27017
@@ -22,195 +24,217 @@ class MongoDB(object):
         self.__dbnames = None
         self.__metrics = []
 
-    # Connect to MongoDB
     def connect(self):
+        """Connect to MongoDB"""
         if self.__conn is None:
-            try:
-                self.__conn = MongoClient(host=self.mongo_host, port=self.mongo_port)
-            except Exception as e:
-                print 'Error in MongoDB connection: %s' % str(e)
+            if self.mongo_user is None:
+                try:
+                    self.__conn = MongoClient('mongodb://%s:%s' %
+                                              (self.mongo_host,
+                                               self.mongo_port))
+                except errors.PyMongoError as py_mongo_error:
+                    print('Error in MongoDB connection: %s' %
+                          str(py_mongo_error))
+            else:
+                try:
+                    self.__conn = MongoClient('mongodb://%s:%s@%s:%s' %
+                                              (self.mongo_user,
+                                               self.mongo_password,
+                                               self.mongo_host,
+                                               self.mongo_port))
+                except errors.PyMongoError as py_mongo_error:
+                    print('Error in MongoDB connection: %s' %
+                          str(py_mongo_error))
 
-    # Add each mectrics to the metrics list
-    def addMetrics(self, k, v):
-        dict = {}
-        dict['key'] = k
-        dict['value'] = v
-        self.__metrics.append(dict)
+    def add_metrics(self, k, v):
+        """add each metric to the metrics list"""
+        dict_metrics = {}
+        dict_metrics['key'] = k
+        dict_metrics['value'] = v
+        self.__metrics.append(dict_metrics)
 
-    # Print out all metrics
-    def printMetrics(self):
+    def print_metrics(self):
+        """print out all metrics"""
         metrics = self.__metrics
-        for m in metrics:
-            zabbix_item_key = str(m['key'])
-            zabbix_item_value = str(m['value'])
-            print '- ' + zabbix_item_key + ' ' + zabbix_item_value
+        for metric in metrics:
+            zabbix_item_key = str(metric['key'])
+            zabbix_item_value = str(metric['value'])
+            print('- ' + zabbix_item_key + ' ' + zabbix_item_value)
 
-    # Get a list of DB names
-    def getDBNames(self):
+    def get_db_names(self):
+        """get a list of DB names"""
         if self.__conn is None:
             self.connect()
-        db = self.__conn[self.mongo_db[0]]
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-        master = db.command('isMaster')['ismaster']
-        dict = {}
-        dict['key'] = 'mongodb.ismaster'
-        DBList = []
+        db_handler = self.__conn[self.mongo_db[0]]
+
+        master = db_handler.command('isMaster')['ismaster']
+        dict_metrics = {}
+        dict_metrics['key'] = 'mongodb.ismaster'
         if master:
-            dict['value'] = 1
-            DBNames = self.__conn.database_names()
-            self.__dbnames = DBNames
+            dict_metrics['value'] = 1
+            db_names = self.__conn.database_names()
+            self.__dbnames = db_names
         else:
-            dict['value'] = 0
-        self.__metrics.append(dict)
+            dict_metrics['value'] = 0
+        self.__metrics.append(dict_metrics)
 
-    # Print DB list in json format, to be used for mongo db discovery in zabbix
-    def getMongoDBLLD(self):
+    def get_mongo_db_lld(self):
+        """print DB list in json format, to be used for
+        mongo db discovery in zabbix"""
         if self.__dbnames is None:
-            DBNames = self.getDBNames()
+            db_names = self.get_db_names()
         else:
-            DBNames = self.__dbnames
-        dictLLD = {}
-        DBList = []
-        dictLLD['key'] = 'mongodb.discovery'
-        dictLLD['value'] = {"data": DBList}
-        if DBNames is not None:
-            for db in DBNames:
-                dict = {}
-                dict['{#MONGODBNAME}'] = db
-                DBList.append(dict)
-            dictLLD['value'] = {"data": DBList}
-        self.__metrics.insert(0, dictLLD)
+            db_names = self.__dbnames
+        dict_metrics = {}
+        db_list = []
+        dict_metrics['key'] = 'mongodb.discovery'
+        dict_metrics['value'] = {"data": db_list}
+        if db_names is not None:
+            for db_name in db_names:
+                dict_lld_metric = {}
+                dict_lld_metric['{#MONGODBNAME}'] = db_name
+                db_list.append(dict_lld_metric)
+            dict_metrics['value'] = {"data": db_list}
+        self.__metrics.insert(0, dict_metrics)
 
-    def getOplog(self):
-        db = MongoClient(self.mongo_host, self.mongo_port)
+    def get_oplog(self):
+        """get replica set oplog information"""
+        if self.__conn is None:
+            self.connect()
+        db_handler = self.__conn['local']
 
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-
-        dbl = db.local
-        coll = dbl['oplog.rs']
+        coll = db_handler.oplog.rs
 
         op_first = (coll.find().sort('$natural', 1).limit(1))
-
-        while op_first.alive:
-            op_fst = (op_first.next())['ts'].time
-
         op_last = (coll.find().sort('$natural', -1).limit(1))
 
-        while op_last.alive:
+        # if host is not a member of replica set, without this check we will
+        # raise StopIteration as guided in
+        # http://api.mongodb.com/python/current/api/pymongo/cursor.html
+
+        if op_first.count() > 0 and op_last.count() > 0:
+            op_fst = (op_first.next())['ts'].time
             op_last_st = op_last[0]['ts']
             op_lst = (op_last.next())['ts'].time
 
-        status = round(float(op_lst - op_fst), 1)
-        self.addMetrics('mongodb.oplog', status)
+            status = round(float(op_lst - op_fst), 1)
+            self.add_metrics('mongodb.oplog', status)
 
-        currentTime = timegm(gmtime())
-        oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
-        self.addMetrics('mongodb.oplog-sync', (currentTime - oplog))
-
-
-    def getMaintenance(self):
-        db = MongoClient(self.mongo_host, self.mongo_port)
-
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-
-        host_name = socket.gethostname()
-
-        fsync_locked = int(db.is_locked)
-
-        config = db.admin.command("replSetGetConfig", 1)
-        for i in range(0, len(config['config']['members'])):
-            if host_name in config['config']['members'][i]['host']:
-                priority = config['config']['members'][i]['priority']
-                hidden = int(config['config']['members'][i]['hidden'])
-
-        self.addMetrics('mongodb.fsync-locked', fsync_locked)
-        self.addMetrics('mongodb.priority', priority)
-        self.addMetrics('mongodb.hidden', hidden)
+            current_time = timegm(gmtime())
+            oplog = int(((str(op_last_st).split('('))[1].split(','))[0])
+            self.add_metrics('mongodb.oplog-sync', (current_time - oplog))
 
 
-    # Get Server Status
-    def getServerStatusMetrics(self):
+    def get_maintenance(self):
+        """get replica set maintenance info"""
         if self.__conn is None:
             self.connect()
-        db = self.__conn[self.mongo_db[0]]
-        if self.mongo_user and self.mongo_password:
-            db.authenticate(self.mongo_user, self.mongo_password)
-        ss = db.command('serverStatus')
+        db_handler = self.__conn
 
-        #print ss
+        fsync_locked = int(db_handler.is_locked)
+        self.add_metrics('mongodb.fsync-locked', fsync_locked)
+
+        try:
+            config = db_handler.admin.command("replSetGetConfig", 1)
+            connstring = (self.mongo_host + ':' + str(self.mongo_port))
+
+            for i in range(0, len(config['config']['members'])):
+                if connstring in config['config']['members'][i]['host']:
+                    priority = config['config']['members'][i]['priority']
+                    hidden = int(config['config']['members'][i]['hidden'])
+
+            self.add_metrics('mongodb.priority', priority)
+            self.add_metrics('mongodb.hidden', hidden)
+        except errors.PyMongoError:
+            print ('Error while fetching replica set configuration.'
+                   'Not a member of replica set?')
+
+    def get_server_status_metrics(self):
+        """get server status"""
+        if self.__conn is None:
+            self.connect()
+        db_handler = self.__conn[self.mongo_db[0]]
+        ss = db_handler.command('serverStatus')
 
         # db info
-        self.addMetrics('mongodb.version', ss['version'])
-        self.addMetrics('mongodb.storageEngine', ss['storageEngine']['name'])
-        self.addMetrics('mongodb.uptime', int(ss['uptime']))
-        self.addMetrics('mongodb.okstatus', int(ss['ok']))
+        self.add_metrics('mongodb.version', ss['version'])
+        self.add_metrics('mongodb.storageEngine', ss['storageEngine']['name'])
+        self.add_metrics('mongodb.uptime', int(ss['uptime']))
+        self.add_metrics('mongodb.okstatus', int(ss['ok']))
 
         # asserts
         for k, v in ss['asserts'].items():
-            self.addMetrics('mongodb.asserts.' + k, v)
+            self.add_metrics('mongodb.asserts.' + k, v)
 
         # operations
         for k, v in ss['opcounters'].items():
-            self.addMetrics('mongodb.operation.' + k, v)
+            self.add_metrics('mongodb.operation.' + k, v)
 
         # memory
         for k in ['resident', 'virtual', 'mapped', 'mappedWithJournal']:
-            self.addMetrics('mongodb.memory.' + k, ss['mem'][k])
+            self.add_metrics('mongodb.memory.' + k, ss['mem'][k])
 
         # connections
         for k, v in ss['connections'].items():
-            self.addMetrics('mongodb.connection.' + k, v)
+            self.add_metrics('mongodb.connection.' + k, v)
 
         # network
         for k, v in ss['network'].items():
-            self.addMetrics('mongodb.network.' + k, v)
+            self.add_metrics('mongodb.network.' + k, v)
 
         # extra info
-        self.addMetrics('mongodb.page.faults', ss['extra_info']['page_faults'])
+        self.add_metrics('mongodb.page.faults',
+                         ss['extra_info']['page_faults'])
 
         #wired tiger
-        self.addMetrics('mongodb.used-cache', ss['wiredTiger']['cache']["bytes currently in the cache"])
-        self.addMetrics('mongodb.total-cache', ss['wiredTiger']['cache']["maximum bytes configured"])
-        self.addMetrics('mongodb.dirty-cache', ss['wiredTiger']['cache']["tracked dirty bytes in the cache"])
+        if ss['storageEngine']['name'] == 'wiredTiger':
+            self.add_metrics('mongodb.used-cache',
+                             ss['wiredTiger']['cache']
+                             ["bytes currently in the cache"])
+            self.add_metrics('mongodb.total-cache',
+                             ss['wiredTiger']['cache']
+                             ["maximum bytes configured"])
+            self.add_metrics('mongodb.dirty-cache',
+                             ss['wiredTiger']['cache']
+                             ["tracked dirty bytes in the cache"])
 
         # global lock
-        lockTotalTime = ss['globalLock']['totalTime']
-        self.addMetrics('mongodb.globalLock.totalTime', lockTotalTime)
+        lock_total_time = ss['globalLock']['totalTime']
+        self.add_metrics('mongodb.globalLock.totalTime', lock_total_time)
         for k, v in ss['globalLock']['currentQueue'].items():
-            self.addMetrics('mongodb.globalLock.currentQueue.' + k, v)
+            self.add_metrics('mongodb.globalLock.currentQueue.' + k, v)
         for k, v in ss['globalLock']['activeClients'].items():
-            self.addMetrics('mongodb.globalLock.activeClients.' + k, v)
+            self.add_metrics('mongodb.globalLock.activeClients.' + k, v)
 
-    # Get DB stats for each DB
-    def getDBStatsMetrics(self):
+    def get_db_stats_metrics(self):
+        """get DB stats for each DB"""
         if self.__conn is None:
             self.connect()
         if self.__dbnames is None:
-            self.getDBNames()
+            self.get_db_names()
         if self.__dbnames is not None:
             for mongo_db in self.__dbnames:
-                db = self.__conn[mongo_db]
-                if self.mongo_user and self.mongo_password:
-                    self.__conn[self.mongo_db[0]].authenticate(self.mongo_user, self.mongo_password)
-                dbs = db.command('dbstats')
+                db_handler = self.__conn[mongo_db]
+                dbs = db_handler.command('dbstats')
                 for k, v in dbs.items():
-                    if k in ['storageSize','ok','avgObjSize','indexes','objects','collections','fileSize','numExtents','dataSize','indexSize','nsSizeMB']:
-                        self.addMetrics('mongodb.stats.' + k + '[' + mongo_db + ']', int(v))
-    # Close connection
+                    if k in ['storageSize', 'ok', 'avgObjSize', 'indexes',
+                             'objects', 'collections', 'fileSize',
+                             'numExtents', 'dataSize', 'indexSize',
+                             'nsSizeMB']:
+                        self.add_metrics('mongodb.stats.' + k +
+                                         '[' + mongo_db + ']', int(v))
     def close(self):
+        """close connection to mongo"""
         if self.__conn is not None:
             self.__conn.close()
 
 if __name__ == '__main__':
-    MongoDB = MongoDB()
-    MongoDB.getDBNames()
-    MongoDB.getMongoDBLLD()
-    MongoDB.getOplog()
-    MongoDB.getMaintenance()
-    MongoDB.getServerStatusMetrics()
-    MongoDB.getDBStatsMetrics()
-    MongoDB.printMetrics()
-    MongoDB.close()
+    mongodb = MongoDB()
+    mongodb.get_db_names()
+    mongodb.get_mongo_db_lld()
+    mongodb.get_oplog()
+    mongodb.get_maintenance()
+    mongodb.get_server_status_metrics()
+    mongodb.get_db_stats_metrics()
+    mongodb.print_metrics()
+    mongodb.close()
