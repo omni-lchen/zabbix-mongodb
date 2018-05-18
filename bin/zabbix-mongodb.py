@@ -10,6 +10,7 @@ from calendar import timegm
 from time import gmtime
 
 from pymongo import MongoClient, errors
+from sys import exit
 
 class MongoDB(object):
     """main script class"""
@@ -137,9 +138,13 @@ class MongoDB(object):
         try:
             config = db_handler.admin.command("replSetGetConfig", 1)
             connstring = (self.mongo_host + ':' + str(self.mongo_port))
+            connstrings = list()
 
             for i in range(0, len(config['config']['members'])):
-                if connstring in config['config']['members'][i]['host']:
+                host = config['config']['members'][i]['host']
+                connstrings.append(host)
+
+                if connstring in host:
                     priority = config['config']['members'][i]['priority']
                     hidden = int(config['config']['members'][i]['hidden'])
 
@@ -148,6 +153,9 @@ class MongoDB(object):
         except errors.PyMongoError:
             print ('Error while fetching replica set configuration.'
                    'Not a member of replica set?')
+        except UnboundLocalError:
+            print ('Cannot use this mongo host: must be one of ' + ','.join(connstrings))
+            exit(1)
 
     def get_server_status_metrics(self):
         """get server status"""
