@@ -12,6 +12,8 @@ from time import gmtime
 from pymongo import MongoClient, errors
 from sys import exit
 
+import json
+
 class MongoDB(object):
     """main script class"""
     # pylint: disable=too-many-instance-attributes
@@ -95,7 +97,7 @@ class MongoDB(object):
                 dict_lld_metric = {}
                 dict_lld_metric['{#MONGODBNAME}'] = db_name
                 db_list.append(dict_lld_metric)
-            dict_metrics['value'] = {"data": db_list}
+            dict_metrics['value'] = '{"data": ' + json.dumps(db_list) + '}'
         self.__metrics.insert(0, dict_metrics)
 
     def get_oplog(self):
