@@ -12,13 +12,15 @@ from time import gmtime
 from pymongo import MongoClient, errors
 from sys import exit
 
-import json
+import json, socket
 
 class MongoDB(object):
     """main script class"""
     # pylint: disable=too-many-instance-attributes
     def __init__(self):
-        self.mongo_host = "127.0.0.1"
+        #self.mongo_host = "127.0.0.1"
+        #fix for ReplicaSet
+        self.mongo_host = socket.gethostname()
         self.mongo_port = 27017
         self.mongo_db = ["admin", ]
         self.mongo_user = None
