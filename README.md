@@ -1,6 +1,7 @@
 # Zabbix-MongoDB 
 It works with MongoDB 4.0+
-A Zabbix plugin for monitoring MongoDB.
+
+# A Zabbix plugin for monitoring MongoDB.
 
 # Installation
 1. Import the mongodb template to zabbix and link it to the zabbix mongodb host.
