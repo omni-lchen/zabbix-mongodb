@@ -1,4 +1,5 @@
-# Zabbix-MongoDB
+# Zabbix-MongoDB 
+It works with MongoDB 4.0+
 A Zabbix plugin for monitoring MongoDB.
 
 # Installation
