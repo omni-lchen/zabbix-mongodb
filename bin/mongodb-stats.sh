@@ -13,7 +13,7 @@ varA="$1 ~ /^info/ && match($1,/[0-9].*$/)"
 varB="{sum+=substr($1,RSTART,RLENGTH)\} END \{print sum}"
 
 # Send the results to zabbix server by using zabbix sender
-result=$(get_MongoDB_metrics | /usr/bin/zabbix_sender -vv -c /etc/zabbix/zabbix_agentd.conf -i - 2>&1)
+result=$(get_MongoDB_metrics | /usr/bin/zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -i - 2>&1)
 response=$(echo "$result" | awk -F ";" '$varA $varB')
 
 if [ -n "$response" ]; then
