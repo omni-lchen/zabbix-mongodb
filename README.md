@@ -11,7 +11,7 @@ It works with MongoDB 4.0+
 Note:
 - Zabbix sender uses zabbix agent configuration to send the metrics, please check the hostname is set in the zabbix agent config /etc/zabbix/zabbix_agentd.conf, by default the hostname may be commented out.
 Note:
-- For using python3 you need to isntall some packages:
+- For using python3 you need to install some packages:
 
 ```sudo apt-get install build-essential python-dev python3-pip```
 ```sudo pip3 install pymongo```
@@ -21,7 +21,7 @@ Note:
 ```sudo apt-get install zabbix-sender -y ```
 
 or you can download package for your distro from http://repo.zabbix.com and install it by dpkg
-for example in Ubuntu/Debian
+for example in **Ubuntu/Debian**
 
 ```wget http://repo.zabbix.com/zabbix/4.0/ubuntu/pool/main/z/zabbix/zabbix-sender_4.0.8-1%2Bbionic_amd64.deb && dpkg -i zabbix-sender_4.0.8-1+bionic_amd64.deb ```
 
