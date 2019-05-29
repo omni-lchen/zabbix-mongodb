@@ -8,8 +8,10 @@ A Zabbix plugin for monitoring MongoDB.
 
 Note:
 - Zabbix sender uses zabbix agent configuration to send the metrics, please check the hostname is set in the zabbix agent config /etc/zabbix/zabbix_agentd.conf, by default the hostname may be commented out.
-
-The following metrics are collected on mongodb version 3.0 by using python mongodb client, and then sent by zabbix sender.
+Note:
+- For using python3 you need to isntall some packages
+sudo apt-get install build-essential python-dev python3-pip
+sudo pip3 install pymongo
 
 **Server Stats**
 - mongodb.ismaster
