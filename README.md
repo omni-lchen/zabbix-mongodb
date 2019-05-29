@@ -3,7 +3,7 @@ A Zabbix plugin for monitoring MongoDB.
 
 # Installation
 1. Import the mongodb template to zabbix and link it to the zabbix mongodb host.
-2. Copy the scripts to mongodb host in /usr/local/bin .
+2. cd /etc/zabbix && git clone https://github.com/denisgolius/zabbix-mongodb && cd zabbix-mongodb .
 3. Copy mongodb zabbix agent configuration to /etc/zabbix-agent/zabbix_agentd.d and restart zabbix agent.
 
 Note:
