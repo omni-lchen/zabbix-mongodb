@@ -1,15 +1,29 @@
-# Zabbix-MongoDB
-A Zabbix plugin for monitoring MongoDB.
+# Zabbix-MongoDB 
+It works with MongoDB 4.0+
+
+# A Zabbix plugin for monitoring MongoDB.
 
 # Installation
 1. Import the mongodb template to zabbix and link it to the zabbix mongodb host.
-2. Copy the scripts to mongodb host in /usr/local/bin .
+2. cd /etc/zabbix && git clone https://github.com/denisgolius/zabbix-mongodb && cd zabbix-mongodb .
 3. Copy mongodb zabbix agent configuration to /etc/zabbix-agent/zabbix_agentd.d and restart zabbix agent.
 
 Note:
 - Zabbix sender uses zabbix agent configuration to send the metrics, please check the hostname is set in the zabbix agent config /etc/zabbix/zabbix_agentd.conf, by default the hostname may be commented out.
+Note:
+- For using python3 you need to install some packages:
 
-The following metrics are collected on mongodb version 3.0 by using python mongodb client, and then sent by zabbix sender.
+```sudo apt-get install build-essential python-dev python3-pip```
+```sudo pip3 install pymongo```
+
+- If your zabbix server was isntalled from official repository by apt, yum, dnf, rpm - just install zabbix_get, for ubuntu/debian run:
+
+```sudo apt-get install zabbix-sender -y ```
+
+or you can download package for your distro from http://repo.zabbix.com and install it by dpkg
+for example in **Ubuntu/Debian**
+
+```wget http://repo.zabbix.com/zabbix/4.0/ubuntu/pool/main/z/zabbix/zabbix-sender_4.0.8-1%2Bbionic_amd64.deb && dpkg -i zabbix-sender_4.0.8-1+bionic_amd64.deb ```
 
 **Server Stats**
 - mongodb.ismaster
