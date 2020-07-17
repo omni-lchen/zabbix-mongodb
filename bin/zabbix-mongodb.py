@@ -182,7 +182,8 @@ class MongoDB(object):
 
         # memory
         for k in ['resident', 'virtual', 'mapped', 'mappedWithJournal']:
-            self.add_metrics('mongodb.memory.' + k, ss['mem'][k])
+            if k in ss['mem'].keys():
+                self.add_metrics('mongodb.memory.' + k, ss['mem'][k])
 
         # connections
         for k, v in ss['connections'].items():
